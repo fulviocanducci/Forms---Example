@@ -2,7 +2,6 @@
 using Models;
 using System.Collections.Generic;
 using System.Data;
-
 namespace Dal
 {
    public class DalClient : IAdd<Client>, IUpdate<Client>, IDelete<Client>, IFind<Client>, IFindAll<Client>
@@ -116,9 +115,10 @@ namespace Dal
 
       internal void CreateParameter(IDbCommand command, string parameterName, object value)
       {
-         IDbDataParameter paramId = command.CreateParameter();
-         paramId.ParameterName = parameterName;
-         paramId.Value = value;
+         IDbDataParameter param = command.CreateParameter();
+         param.ParameterName = parameterName;
+         param.Value = value;
+         command.Parameters.Add(param);
       }
    }
 }
