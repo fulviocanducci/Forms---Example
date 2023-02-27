@@ -1,4 +1,5 @@
-﻿using Interfaces;
+﻿using Dal.Extensions;
+using Interfaces;
 using Models;
 using System.Collections.Generic;
 using System.Data;
@@ -17,13 +18,16 @@ namespace Dal
       {
          using (IDbCommand command = Connection.CreateCommand())
          {
-            CreateParameter(command, model, true);
-            command.CommandText = "INSERT INTO Client (Name, CityId) VALUES(@Name, @CityId); SELECT last_insert_rowid()";
+            command.AddParameter("@Name", model.Name);
+            command.AddParameter("@CityId", model.CityId);
+            command.CommandText = "INSERT INTO Client (Name, CityId) VALUES(@Name, @CityId);".GetInsertId();
+            Connection.Open();
             object result = command.ExecuteScalar();
             if (long.TryParse(result.ToString(), out long id))
             {
                model.Id = id;
             }
+            Connection.Close();
          }
          return model;
       }
@@ -33,8 +37,9 @@ namespace Dal
          Client model = null;
          using (IDbCommand command = Connection.CreateCommand())
          {
-            CreateParameterId(command, (long)keys[0]);
+            command.AddParameter("@Id", (long)keys[0]);
             command.CommandText = "SELECT Id, Name, CityId FROM Client WHERE Id=@Id";
+            Connection.Open();
             using (IDataReader reader = command.ExecuteReader())
             {
                if (reader.Read())
@@ -48,6 +53,7 @@ namespace Dal
                }
                reader.Close();
             }
+            Connection.Close();
          }
          return model;
       }
@@ -56,8 +62,9 @@ namespace Dal
       {
          using (IDbCommand command = Connection.CreateCommand())
          {
-            CreateParameter(command, "@Name", filters[0]);
-            command.CommandText = "SELECT Id, Name, CityId FROM Client WHERE Name LIKE @Name";
+            command.AddParameter("@Name", filters[0]);
+            command.CommandText = "SELECT Id, Name, CityId FROM Client WHERE Name LIKE @Name ORDER BY Name ASC";
+            Connection.Open();
             using (IDataReader reader = command.ExecuteReader())
             {
                while (reader.Read())
@@ -71,6 +78,7 @@ namespace Dal
                }
                reader.Close();
             }
+            Connection.Close();
          }
       }
 
@@ -79,9 +87,13 @@ namespace Dal
          bool result = false;
          using (IDbCommand command = Connection.CreateCommand())
          {
-            CreateParameter(command, model, false);
+            command.AddParameter("@Name", model.Name);
+            command.AddParameter("@CityId", model.CityId);
+            command.AddParameter("@Id", model.Id);
             command.CommandText = "UPDATE Client SET Name=@Name, CityId=@CityId WHERE Id=@Id";
+            Connection.Open();
             result = command.ExecuteNonQuery() > 0;
+            Connection.Close();
          }
          return result;
       }
@@ -91,34 +103,13 @@ namespace Dal
          bool result = false;
          using (IDbCommand command = Connection.CreateCommand())
          {
-            CreateParameterId(command, (long)keys[0]);
+            command.AddParameter("@Id", (long)keys[0]);
             command.CommandText = "DELETE FROM Client WHERE Id=@Id";
+            Connection.Open();
             result = command.ExecuteNonQuery() > 0;
+            Connection.Close();
          }
          return result;
-      }
-
-      internal void CreateParameter(IDbCommand command, Client model, bool insert = true)
-      {
-         CreateParameter(command, "@Name", model.Name);
-         CreateParameter(command, "@CityId", model.CityId);
-         if (insert == false)
-         {
-            CreateParameterId(command, model.Id);
-         }
-      }
-
-      internal void CreateParameterId(IDbCommand command, long id)
-      {
-         CreateParameter(command, "@Id", id);
-      }
-
-      internal void CreateParameter(IDbCommand command, string parameterName, object value)
-      {
-         IDbDataParameter param = command.CreateParameter();
-         param.ParameterName = parameterName;
-         param.Value = value;
-         command.Parameters.Add(param);
       }
    }
 }

@@ -4,6 +4,4 @@
    {
       bool Delete(params object[] keys);
    }
-
-
 }
