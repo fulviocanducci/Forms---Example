@@ -6,6 +6,4 @@ namespace Interfaces
    {
       IEnumerable<T> FindAll(params object[] filters);
    }
-
-
 }

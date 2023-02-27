@@ -1,11 +1,14 @@
 ﻿using Dal.Extensions;
 using Interfaces;
 using Models;
+using Models.ViewModels;
 using System.Collections.Generic;
 using System.Data;
+using System.Text;
+
 namespace Dal
 {
-   public class DalClient : IAdd<Client>, IUpdate<Client>, IDelete<Client>, IFind<Client>, IFindAll<Client>
+   public class DalClient : IAdd<Client>, IUpdate<Client>, IDelete<Client>, IFind<Client>, IFindAll<Client>, IExist<Client>, IGridAll<ClientViewModel>
    {
       private IConnection Connection { get; }
 
@@ -46,9 +49,9 @@ namespace Dal
                {
                   model = new Client
                   {
-                     Id = reader.GetInt64(1),
-                     Name = reader.GetString(2),
-                     CityId = reader.GetInt64(3)
+                     Id = reader.GetInt64(0),
+                     Name = reader.GetString(1),
+                     CityId = reader.GetInt64(2)
                   };
                }
                reader.Close();
@@ -62,7 +65,7 @@ namespace Dal
       {
          using (IDbCommand command = Connection.CreateCommand())
          {
-            command.AddParameter("@Name", filters[0]);
+            command.AddParameter("@Name", $"%{filters[0]}%");
             command.CommandText = "SELECT Id, Name, CityId FROM Client WHERE Name LIKE @Name ORDER BY Name ASC";
             Connection.Open();
             using (IDataReader reader = command.ExecuteReader())
@@ -71,10 +74,38 @@ namespace Dal
                {
                   yield return new Client
                   {
-                     Id = reader.GetInt64(1),
-                     Name = reader.GetString(2),
-                     CityId = reader.GetInt64(3)
+                     Id = reader.GetInt64(0),
+                     Name = reader.GetString(1),
+                     CityId = reader.GetInt64(2)
                   };
+               }
+               reader.Close();
+            }
+            Connection.Close();
+         }
+      }
+
+      public IEnumerable<ClientViewModel> GridAll(params object[] filters)
+      {
+         using (IDbCommand command = Connection.CreateCommand())
+         {
+            StringBuilder sql = new StringBuilder();
+            sql.Append("SELECT Client.Id, Client.Name, City.Name as CityName FROM Client JOIN City ");
+            sql.Append("ON Client.CityId = City.Id ");
+            sql.Append("WHERE Client.Name LIKE @Name ORDER BY Client.Name ASC");
+            command.AddParameter("@Name", $"%{filters[0]}%");
+            command.CommandText = sql.ToString();
+            Connection.Open();
+            using (IDataReader reader = command.ExecuteReader())
+            {
+               while (reader.Read())
+               {
+                  yield return new ClientViewModel
+                     (
+                        reader.GetInt64(0), 
+                        reader.GetString(1), 
+                        reader.GetString(2)
+                     );
                }
                reader.Close();
             }
@@ -111,5 +142,22 @@ namespace Dal
          }
          return result;
       }
+
+      public bool Exist(params object[] keys)
+      {
+         bool result = false;
+         using (IDbCommand command = Connection.CreateCommand())
+         {
+            command.AddParameter("@Id", keys[0]);
+            command.CommandText = "SELECT COUNT(*) FROM Client WHERE Id=@Id";
+            Connection.Open();
+            if (long.TryParse(command.ExecuteScalar().ToString(), out long count))
+            {
+               return count > 0;
+            }
+            Connection.Close();
+         }
+         return result;
+      }      
    }
 }

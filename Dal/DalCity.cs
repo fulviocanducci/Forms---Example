@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 namespace Dal
 {
-   public sealed class DalCity : IFind<City>, IFindAll<City>
+   public sealed class DalCity : IFind<City>, IFindAll<City>, IExist<City>
    {
       private IConnection Connection { get; }
 
@@ -28,8 +28,8 @@ namespace Dal
                {
                   model = new City
                   {
-                     Id = reader.GetInt64(1),
-                     Name = reader.GetString(2)
+                     Id = reader.GetInt64(0),
+                     Name = reader.GetString(1)
                   };
                }
                reader.Close();
@@ -43,7 +43,7 @@ namespace Dal
       {
          using (IDbCommand command = Connection.CreateCommand())
          {
-            command.AddParameter("@Name", filters[0]);
+            command.AddParameter("@Name", $"%{filters[0]}%");
             command.CommandText = "SELECT Id, Name FROM City WHERE Name LIKE @Name ORDER BY Name ASC";
             Connection.Open();
             using (IDataReader reader = command.ExecuteReader())
@@ -52,14 +52,31 @@ namespace Dal
                {
                   yield return new City
                   {
-                     Id = reader.GetInt64(1),
-                     Name = reader.GetString(2)
+                     Id = reader.GetInt64(0),
+                     Name = reader.GetString(1)
                   };
                }
                reader.Close();
             }
             Connection.Close();
          }
+      }
+
+      public bool Exist(params object[] keys)
+      {
+         bool result = false;
+         using (IDbCommand command = Connection.CreateCommand())
+         {
+            command.AddParameter("@Id", keys[0]);
+            command.CommandText = "SELECT COUNT(*) FROM City WHERE Id=@Id";
+            Connection.Open();
+            if (long.TryParse(command.ExecuteScalar().ToString(), out long count))
+            {
+               return count > 0;
+            }
+            Connection.Close();
+         }
+         return result;
       }
    }
 }

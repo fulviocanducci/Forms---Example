@@ -29,35 +29,41 @@
       private void InitializeComponent()
       {
          DataGridViewGeneral = new DataGridView();
-         textBox1 = new TextBox();
          ButClose = new Button();
          ((System.ComponentModel.ISupportInitialize)DataGridViewGeneral).BeginInit();
          SuspendLayout();
          // 
          // DataGridViewGeneral
          // 
-         DataGridViewGeneral.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-         DataGridViewGeneral.Location = new Point(12, 41);
+         DataGridViewGeneral.AllowUserToAddRows = false;
+         DataGridViewGeneral.AllowUserToDeleteRows = false;
+         DataGridViewGeneral.AllowUserToResizeColumns = false;
+         DataGridViewGeneral.AllowUserToResizeRows = false;
+         DataGridViewGeneral.BackgroundColor = Color.FromArgb(255, 255, 192);
+         DataGridViewGeneral.ClipboardCopyMode = DataGridViewClipboardCopyMode.Disable;
+         DataGridViewGeneral.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+         DataGridViewGeneral.EditMode = DataGridViewEditMode.EditProgrammatically;
+         DataGridViewGeneral.GridColor = SystemColors.Control;
+         DataGridViewGeneral.Location = new Point(5, 6);
          DataGridViewGeneral.Name = "DataGridViewGeneral";
+         DataGridViewGeneral.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
          DataGridViewGeneral.RowTemplate.Height = 25;
+         DataGridViewGeneral.ScrollBars = ScrollBars.Vertical;
+         DataGridViewGeneral.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+         DataGridViewGeneral.ShowCellErrors = false;
+         DataGridViewGeneral.ShowEditingIcon = false;
+         DataGridViewGeneral.ShowRowErrors = false;
          DataGridViewGeneral.Size = new Size(776, 367);
          DataGridViewGeneral.TabIndex = 0;
          DataGridViewGeneral.CellDoubleClick += DataGridViewGeneral_CellDoubleClick;
          DataGridViewGeneral.PreviewKeyDown += DataGridViewGeneral_PreviewKeyDown;
          // 
-         // textBox1
-         // 
-         textBox1.Location = new Point(12, 12);
-         textBox1.Name = "textBox1";
-         textBox1.Size = new Size(776, 23);
-         textBox1.TabIndex = 1;
-         // 
          // ButClose
          // 
-         ButClose.Location = new Point(713, 414);
+         ButClose.Location = new Point(706, 379);
          ButClose.Name = "ButClose";
          ButClose.Size = new Size(75, 23);
-         ButClose.TabIndex = 2;
+         ButClose.TabIndex = 1;
          ButClose.Text = "Fecha&r";
          ButClose.UseVisualStyleBackColor = true;
          ButClose.Click += ButClose_Click;
@@ -66,9 +72,9 @@
          // 
          AutoScaleDimensions = new SizeF(7F, 15F);
          AutoScaleMode = AutoScaleMode.Font;
-         ClientSize = new Size(799, 444);
+         CancelButton = ButClose;
+         ClientSize = new Size(786, 410);
          Controls.Add(ButClose);
-         Controls.Add(textBox1);
          Controls.Add(DataGridViewGeneral);
          FormBorderStyle = FormBorderStyle.FixedSingle;
          KeyPreview = true;
@@ -81,13 +87,11 @@
          KeyUp += FormSearch_KeyUp;
          ((System.ComponentModel.ISupportInitialize)DataGridViewGeneral).EndInit();
          ResumeLayout(false);
-         PerformLayout();
       }
 
       #endregion
 
       private DataGridView DataGridViewGeneral;
-      private TextBox textBox1;
       private Button ButClose;
    }
 }

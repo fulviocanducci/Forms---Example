@@ -15,7 +15,7 @@ namespace Dal
       {
          if (Connect != null && Connect.State == ConnectionState.Open)
          {
-            Connect.Open();
+            Connect.Close();
          }
       }
 
