@@ -29,36 +29,65 @@
       private void InitializeComponent()
       {
          DataGridViewGeneral = new DataGridView();
+         textBox1 = new TextBox();
+         ButClose = new Button();
          ((System.ComponentModel.ISupportInitialize)DataGridViewGeneral).BeginInit();
          SuspendLayout();
          // 
          // DataGridViewGeneral
          // 
          DataGridViewGeneral.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-         DataGridViewGeneral.Location = new Point(12, 12);
+         DataGridViewGeneral.Location = new Point(12, 41);
          DataGridViewGeneral.Name = "DataGridViewGeneral";
          DataGridViewGeneral.RowTemplate.Height = 25;
-         DataGridViewGeneral.Size = new Size(776, 426);
+         DataGridViewGeneral.Size = new Size(776, 367);
          DataGridViewGeneral.TabIndex = 0;
          DataGridViewGeneral.CellDoubleClick += DataGridViewGeneral_CellDoubleClick;
          DataGridViewGeneral.PreviewKeyDown += DataGridViewGeneral_PreviewKeyDown;
+         // 
+         // textBox1
+         // 
+         textBox1.Location = new Point(12, 12);
+         textBox1.Name = "textBox1";
+         textBox1.Size = new Size(776, 23);
+         textBox1.TabIndex = 1;
+         // 
+         // ButClose
+         // 
+         ButClose.Location = new Point(713, 414);
+         ButClose.Name = "ButClose";
+         ButClose.Size = new Size(75, 23);
+         ButClose.TabIndex = 2;
+         ButClose.Text = "Fecha&r";
+         ButClose.UseVisualStyleBackColor = true;
+         ButClose.Click += ButClose_Click;
          // 
          // FormSearch
          // 
          AutoScaleDimensions = new SizeF(7F, 15F);
          AutoScaleMode = AutoScaleMode.Font;
-         ClientSize = new Size(800, 450);
+         ClientSize = new Size(799, 444);
+         Controls.Add(ButClose);
+         Controls.Add(textBox1);
          Controls.Add(DataGridViewGeneral);
+         FormBorderStyle = FormBorderStyle.FixedSingle;
+         KeyPreview = true;
+         MaximizeBox = false;
+         MinimizeBox = false;
          Name = "FormSearch";
+         StartPosition = FormStartPosition.CenterScreen;
          Text = "FormSearch";
          Load += FormSearch_Load;
          KeyUp += FormSearch_KeyUp;
          ((System.ComponentModel.ISupportInitialize)DataGridViewGeneral).EndInit();
          ResumeLayout(false);
+         PerformLayout();
       }
 
       #endregion
 
       private DataGridView DataGridViewGeneral;
+      private TextBox textBox1;
+      private Button ButClose;
    }
 }

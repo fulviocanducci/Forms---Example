@@ -66,5 +66,11 @@
             Close();
          }
       }
+
+      private void ButClose_Click(object sender, EventArgs e)
+      {
+         Item = null;
+         Close();
+      }
    }
 }
