@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 namespace Dal
 {
-   public sealed class DalCity : IFind<City>, IFindAll<City>, IExist<City>
+   public sealed class DalCity : IDalCity
    {
       private IConnection Connection { get; }
 

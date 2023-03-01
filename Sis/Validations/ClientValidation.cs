@@ -5,9 +5,9 @@ namespace Sis.Validations
 {
    public sealed class ClientValidation : AbstractValidator<Client>
    {
-      public DalClient DalClient { get; }
-      public DalCity DalCity { get; }
-      public ClientValidation(DalClient dalClient, DalCity dalCity)
+      public IDalClient DalClient { get; }
+      public IDalCity DalCity { get; }
+      public ClientValidation(IDalClient dalClient, IDalCity dalCity)
       {
          DalClient = dalClient;
          DalCity = dalCity;

@@ -5,10 +5,9 @@ using Models.ViewModels;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
-
 namespace Dal
 {
-   public class DalClient : IAdd<Client>, IUpdate<Client>, IDelete<Client>, IFind<Client>, IFindAll<Client>, IExist<Client>, IGridAll<ClientViewModel>
+   public class DalClient : IDalClient
    {
       private IConnection Connection { get; }
 
@@ -102,8 +101,8 @@ namespace Dal
                {
                   yield return new ClientViewModel
                      (
-                        reader.GetInt64(0), 
-                        reader.GetString(1), 
+                        reader.GetInt64(0),
+                        reader.GetString(1),
                         reader.GetString(2)
                      );
                }
@@ -158,6 +157,6 @@ namespace Dal
             Connection.Close();
          }
          return result;
-      }      
+      }
    }
 }

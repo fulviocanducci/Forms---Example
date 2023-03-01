@@ -2,14 +2,15 @@
 using Dal;
 using FluentValidation.Results;
 using Models;
+using Models.ViewModels;
 using Sis.Utils;
 using Sis.Validations;
 namespace Sis.Forms
 {
    public partial class FrmClient : Form
    {
-      private DalClient DalClient { get; }
-      private DalCity DalCity { get; }
+      private IDalClient DalClient { get; }
+      private IDalCity DalCity { get; }
       private ClientValidation ClientValidation { get; }
 
       public FrmClient()
@@ -93,7 +94,7 @@ namespace Sis.Forms
                }
                else
                {
-                  var data = DalClient.GridAll(TxtId.Text).ToList();
+                  List<ClientViewModel> data = DalClient.GridAll(TxtId.Text).ToList();
                   if (data.Count == 0)
                   {
                      MessageBox.Show("Pesquisa sem resultados", "Cliente", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -126,7 +127,7 @@ namespace Sis.Forms
             }
             else
             {
-               var data = DalCity.FindAll(TxtCityId.Text).ToList();
+               List<City> data = DalCity.FindAll(TxtCityId.Text).ToList();
                using FormSearch frm = FabricFormSearchCity.Create(data);
                frm.ShowDialog();
                object? item = frm.Item;
@@ -185,8 +186,7 @@ namespace Sis.Forms
          }
          else
          {
-            string message = string.Join(Environment.NewLine, result.Errors.Select(c => c.ErrorMessage).ToList());
-            MessageBox.Show(message, "Cliente - Erros", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Alert.Show("Cliente - Erros", result);
          }
       }
 
